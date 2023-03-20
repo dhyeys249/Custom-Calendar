@@ -1,7 +1,7 @@
-import { IEventData } from '../../services/IEventData';
-import { IUserPermissions } from '../../services/IUserPermissions';
-import { DayOfWeek } from 'office-ui-fabric-react/lib/DatePicker';
-import { IDropdownOption } from 'office-ui-fabric-react/';
+import { IEventData } from "../../services/IEventData";
+import { IUserPermissions } from "../../services/IUserPermissions";
+import { DayOfWeek } from "office-ui-fabric-react/lib/DatePicker";
+import { IDropdownOption } from "office-ui-fabric-react/";
 export interface IEventState {
   showPanel: boolean;
   eventData: IEventData;
@@ -14,8 +14,8 @@ export interface IEventState {
   endDate?: Date;
   editorState?: any;
   selectedUsers: string[];
-  locationLatitude: number;
-  locationLongitude: number;
+  // locationLatitude: number;
+  // locationLongitude: number;
   errorMessage?: string;
   hasError?: boolean;
   disableButton?: boolean;
