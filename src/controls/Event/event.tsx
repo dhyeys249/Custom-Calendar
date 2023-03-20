@@ -41,6 +41,11 @@ import spservices from "../../services/spservices";
 import { Map, ICoordinates, MapType } from "@pnp/spfx-controls-react/lib/Map";
 import { EventRecurrenceInfo } from "../../controls/EventRecurrenceInfo/EventRecurrenceInfo";
 import { getGUID } from "@pnp/common";
+import {
+  SPHttpClient,
+  SPHttpClientResponse,
+  MSGraphClient,
+} from "@microsoft/sp-http";
 import { toLocaleShortDateString } from "../../utils/dateUtils";
 const format = require("string-format");
 
@@ -104,8 +109,8 @@ const DayPickerStrings: IDatePickerStrings = {
 export class Event extends React.Component<IEventProps, IEventState> {
   private spService: spservices = null;
   private attendees: IPersonaProps[] = [];
-  private latitude: number = 41.1931819;
-  private longitude: number = -8.4897452;
+  // private latitude: number = 41.1931819;
+  // private longitude: number = -8.4897452;
   private returnedRecurrenceInfo: {
     recurrenceData: string;
     eventDate: Date;
@@ -118,15 +123,15 @@ export class Event extends React.Component<IEventProps, IEventState> {
     super(props);
 
     /* geolocation is available */
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.latitude = position.coords.latitude;
-        this.longitude = position.coords.longitude;
-      });
-    } else {
-      /* geolocation IS NOT available */
-      console.log("browser Geolocation is not available");
-    }
+    // if ("geolocation" in navigator) {
+    //   navigator.geolocation.getCurrentPosition((position) => {
+    //     this.latitude = position.coords.latitude;
+    //     this.longitude = position.coords.longitude;
+    //   });
+    // } else {
+    //   /* geolocation IS NOT available */
+    //   console.log("browser Geolocation is not available");
+    // }
     // Initialize Map coordinates
 
     this.state = {
@@ -138,8 +143,8 @@ export class Event extends React.Component<IEventProps, IEventState> {
       endSelectedMin: { key: "00", text: "00" },
       editorState: EditorState.createEmpty(),
       selectedUsers: [],
-      locationLatitude: this.latitude,
-      locationLongitude: this.longitude,
+      // locationLatitude: this.latitude,
+      // locationLongitude: this.longitude,
       hasError: false,
       errorMessage: "",
       disableButton: true,
@@ -169,7 +174,7 @@ export class Event extends React.Component<IEventProps, IEventState> {
     this.onSave = this.onSave.bind(this);
     this.onSelectDateEnd = this.onSelectDateEnd.bind(this);
     this.onSelectDateStart = this.onSelectDateStart.bind(this);
-    this.onUpdateCoordinates = this.onUpdateCoordinates.bind(this);
+    // this.onUpdateCoordinates = this.onUpdateCoordinates.bind(this);
     this.onGetErrorMessageTitle = this.onGetErrorMessageTitle.bind(this);
     this.onChangeEventTitle = this.onChangeEventTitle.bind(this);
     this.getPeoplePickerItems = this.getPeoplePickerItems.bind(this);
@@ -256,15 +261,15 @@ export class Event extends React.Component<IEventProps, IEventState> {
     eventData.EndDate = new Date(end);
 
     // get Geolocation
-    eventData.geolocation = {
-      Latitude: this.latitude,
-      Longitude: this.longitude,
-    };
-    const locationInfo = await this.spService.getGeoLactionName(
-      this.latitude,
-      this.longitude
-    );
-    eventData.location = locationInfo ? locationInfo.display_name : "N/A";
+    // eventData.geolocation = {
+    //   Latitude: this.latitude,
+    //   Longitude: this.longitude,
+    // };
+    // const locationInfo = await this.spService.getGeoLactionName(
+    //   this.latitude,
+    //   this.longitude
+    // );
+    // eventData.location = locationInfo ? locationInfo.display_name : "N/A";
 
     // get Attendees
     if (!eventData.attendes) {
@@ -395,17 +400,17 @@ export class Event extends React.Component<IEventProps, IEventState> {
         }
       }
       // Has geolocation ?
-      this.latitude =
-        event.geolocation && event.geolocation.Latitude
-          ? event.geolocation.Latitude
-          : this.latitude;
-      this.longitude =
-        event.geolocation && event.geolocation.Longitude
-          ? event.geolocation.Longitude
-          : this.longitude;
+      // this.latitude =
+      //   event.geolocation && event.geolocation.Latitude
+      //     ? event.geolocation.Latitude
+      //     : this.latitude;
+      // this.longitude =
+      //   event.geolocation && event.geolocation.Longitude
+      //     ? event.geolocation.Longitude
+      //     : this.longitude;
 
-      event.geolocation.Latitude = this.latitude;
-      event.geolocation.Longitude = this.longitude;
+      // event.geolocation.Latitude = this.latitude;
+      // event.geolocation.Longitude = this.longitude;
 
       const recurrenceInfo =
         event.EventType === "4" && event.MasterSeriesItemID !== ""
@@ -425,8 +430,8 @@ export class Event extends React.Component<IEventProps, IEventState> {
         userPermissions: userListPermissions,
         isloading: false,
         siteRegionalSettings: siteRegionalSettings,
-        locationLatitude: this.latitude,
-        locationLongitude: this.longitude,
+        // locationLatitude: this.latitude,
+        // locationLongitude: this.longitude,
         recurrenceDescription: recurrenceInfo,
       });
     } else {
@@ -694,20 +699,20 @@ export class Event extends React.Component<IEventProps, IEventState> {
    * @param {ICoordinates} coordinates
    * @memberof Event
    */
-  private async onUpdateCoordinates(coordinates: ICoordinates) {
-    this.latitude = coordinates.latitude;
-    this.longitude = coordinates.longitude;
-    const locationInfo = await this.spService.getGeoLactionName(
-      this.latitude,
-      this.longitude
-    );
-    this.setState({
-      eventData: {
-        ...this.state.eventData,
-        location: locationInfo.display_name,
-      },
-    });
-  }
+  // private async onUpdateCoordinates(coordinates: ICoordinates) {
+  //   this.latitude = coordinates.latitude;
+  //   this.longitude = coordinates.longitude;
+  //   const locationInfo = await this.spService.getGeoLactionName(
+  //     this.latitude,
+  //     this.longitude
+  //   );
+  //   this.setState({
+  //     eventData: {
+  //       ...this.state.eventData,
+  //       location: locationInfo.display_name,
+  //     },
+  //   });
+  // }
 
   /**
    *
