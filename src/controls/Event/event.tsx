@@ -525,51 +525,51 @@ export class Event extends React.Component<IEventProps, IEventState> {
 
     // --------------------
 
-    await graph.users
-      .getById(CurrentUser)
-      .calendar.events.add({
-        subject: "Test Event",
-        body: {
-          contentType: "html",
-          content: <h1></h1>,
-          // "<!DOCTYPE html><html><head><title>Page Title</title></head><body><br /><h1>'" +
-          // data.Title +
-          // "'</h1><br /><p>Location : '" +
-          // // data.Location +
-          // // "'</p><br /><a style='border: 1px solid #0078d4;padding: 5px 15px;border-radius: 20px;background: #fff;text-decoration: none;color: #0078d4;' href='" +
-          // // data.DeshboardUrl +
-          // data.AuditID +
-          // "'>Start Audit</a></body></html>",
-        },
-        start: {
-          dateTime: this.state.startDate,
-          timeZone: "GMT Standard Time",
-        },
-        end: {
-          dateTime: this.state.endDate,
-          timeZone: "GMT Standard Time",
-        },
-        // [
-        //     {
-        //         "emailAddress": {
-        //             "address": data.UserEmail[0],
-        //             "name": data.UserEmail[0]
-        //         },
-        //         "type": "required"
-        //     }
-        // ]
-      })
-      .then(async (event) => {
-        // // alert('Event Created');
-        // await this.UpdateEventIDInList(data.AuditID, event.data.id);
-        // console.log(data);
-      })
-      .catch((err) => {
-        console.log(err);
-        // if (err.status == 429) {
-        //     this.reCreateEvents(data, ArrayOfAttendees, CurrentUser)
-        // }
-      });
+    // await graph.users
+    //   .getById(CurrentUser)
+    //   .calendar.events.add({
+    //     subject: "Test Event",
+    //     body: {
+    //       contentType: "html",
+    //       content: <h1></h1>,
+    //       // "<!DOCTYPE html><html><head><title>Page Title</title></head><body><br /><h1>'" +
+    //       // data.Title +
+    //       // "'</h1><br /><p>Location : '" +
+    //       // // data.Location +
+    //       // // "'</p><br /><a style='border: 1px solid #0078d4;padding: 5px 15px;border-radius: 20px;background: #fff;text-decoration: none;color: #0078d4;' href='" +
+    //       // // data.DeshboardUrl +
+    //       // data.AuditID +
+    //       // "'>Start Audit</a></body></html>",
+    //     },
+    //     start: {
+    //       dateTime: this.state.startDate,
+    //       timeZone: "GMT Standard Time",
+    //     },
+    //     end: {
+    //       dateTime: this.state.endDate,
+    //       timeZone: "GMT Standard Time",
+    //     },
+    //     // [
+    //     //     {
+    //     //         "emailAddress": {
+    //     //             "address": data.UserEmail[0],
+    //     //             "name": data.UserEmail[0]
+    //     //         },
+    //     //         "type": "required"
+    //     //     }
+    //     // ]
+    //   })
+    //   .then(async (event) => {
+    //     // // alert('Event Created');
+    //     // await this.UpdateEventIDInList(data.AuditID, event.data.id);
+    //     // console.log(data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     // if (err.status == 429) {
+    //     //     this.reCreateEvents(data, ArrayOfAttendees, CurrentUser)
+    //     // }
+    //   });
 
     // const newEvent = {
     //   subject: "New event",
