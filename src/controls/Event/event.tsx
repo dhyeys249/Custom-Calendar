@@ -44,11 +44,17 @@ import { EventRecurrenceInfo } from "../../controls/EventRecurrenceInfo/EventRec
 import { getGUID } from "@pnp/common";
 import { toLocaleShortDateString } from "../../utils/dateUtils";
 import { graph } from "@pnp/pnpjs";
+import { Calendar } from "react-big-calendar";
 const format = require("string-format");
 const {
   ClientCredentialAuthProvider,
   Client,
 } = require("@microsoft/microsoft-graph-client");
+import {
+  SPHttpClient,
+  SPHttpClientResponse,
+  MSGraphClient,
+} from "@microsoft/sp-http";
 
 const DayPickerStrings: IDatePickerStrings = {
   months: [
@@ -298,7 +304,7 @@ export class Event extends React.Component<IEventProps, IEventState> {
             this.props.siteUrl,
             this.props.listId
           );
-          this.CreateOutlookEvent();
+          this.addOutlookEvent();
           break;
         default:
           break;
@@ -427,172 +433,6 @@ export class Event extends React.Component<IEventProps, IEventState> {
       });
     }
   }
-
-  // :::: Edited by @Dhyey Sojitra ::::
-
-  public CreateOutlookEvent = async () => {
-    let AllEvent = [];
-
-    // getting Current Loged-in user
-    let CurrentUser;
-    // sp.web.currentUser
-    //   .get()
-    //   .then((user) => {
-    //     CurrentUser = user.Email;
-    //     // console.log(CurrentUser);
-    //   })
-    //   .catch((error) => {
-    //     console.log(`Error getting current user: ${error}`);
-    //   });
-
-    // Changing Format of Start & End Date format for Pushing in Outlook
-    let startDate =
-      moment(this.state.startDate).format("YYYY-MM-DD") + "02:01:00";
-    let endDate = moment(this.state.endDate).format("YYYY-MM-DD") + "02:31:00";
-    console.log(`Start Date of Event is: ${startDate}`);
-    console.log(`End Date of Event is: ${endDate}`);
-
-    // AllEvent.push({
-    //   Title: "Test",
-    //   Attendees: "hardikt@desireinfoweb.com",
-    //   Auditdate: startDate,
-    //   AuditEndDate: endDate,
-
-    //   // UserEmail: this.props.ScheduleAuditdatastate.auditAssignesTo.length > 1 ? this.props.ScheduleAuditdatastate.auditAssignesTo.map(data => data.UserName) : this.props.ScheduleAuditdatastate.auditAssignesTo.map(data => data.secondaryText),
-    //   // AuditID: locationReoccurence.ID,
-    // });
-
-    // AllEvent.map(async (data) => {
-    //   let ArrayOfAttendees = [];
-    //   ArrayOfAttendees.push({
-    //     emailAddress: {
-    //       address: data,
-    //       // "name": data.Title
-    //     },
-    //     type: "required",
-    //   });
-    // if (this.props.AuditDatastate.auditType == "AdvanceAudit") {
-    //   if (AssignToUsers.length > 0) {
-    //     AssignToUsers.map((data) =>
-    //       ArrayOfAttendees.push({
-    //         emailAddress: {
-    //           address: data,
-    //           // "name": data.Title
-    //         },
-    //         type: "required",
-    //       })
-    //     );
-    //   }
-    // } else {
-    //   if (
-    //     this.props.AuditDatastate.auditAssignesTo &&
-    //     this.props.AuditDatastate.auditAssignesTo[0].UserName
-    //   ) {
-    //     this.props.AuditDatastate.auditAssignesTo.map((data) =>
-    //       ArrayOfAttendees.push({
-    //         emailAddress: {
-    //           address: data.UserName,
-    //           name: data.Title,
-    //         },
-    //         type: "required",
-    //       })
-    //     );
-    //   } else {
-    //     this.props.AuditDatastate.auditAssignesTo.map((data) =>
-    //       ArrayOfAttendees.push({
-    //         emailAddress: {
-    //           address: data.secondaryText,
-    //           name: data.text,
-    //         },
-    //         type: "required",
-    //       })
-    //     );
-    //   }
-    // }
-    // if (this.props.AuditDatastate.auditStaffMembersemails.length > 0) {
-    //   this.props.AuditDatastate.auditStaffMembersemails.map((data) => {
-    //     ArrayOfAttendees.push({
-    //       emailAddress: {
-    //         address: data.email,
-    //         name: data.text,
-    //       },
-    //       type: "required",
-    //     });
-    //   });
-    // }
-
-    // await graph.users.getById(CurrentUser).calendar.events.inBatch(graphGroupsBatch).add(
-
-    // --------------------
-
-    // await graph.users
-    //   .getById(CurrentUser)
-    //   .calendar.events.add({
-    //     subject: "Test Event",
-    //     body: {
-    //       contentType: "html",
-    //       content: <h1></h1>,
-    //       // "<!DOCTYPE html><html><head><title>Page Title</title></head><body><br /><h1>'" +
-    //       // data.Title +
-    //       // "'</h1><br /><p>Location : '" +
-    //       // // data.Location +
-    //       // // "'</p><br /><a style='border: 1px solid #0078d4;padding: 5px 15px;border-radius: 20px;background: #fff;text-decoration: none;color: #0078d4;' href='" +
-    //       // // data.DeshboardUrl +
-    //       // data.AuditID +
-    //       // "'>Start Audit</a></body></html>",
-    //     },
-    //     start: {
-    //       dateTime: this.state.startDate,
-    //       timeZone: "GMT Standard Time",
-    //     },
-    //     end: {
-    //       dateTime: this.state.endDate,
-    //       timeZone: "GMT Standard Time",
-    //     },
-    //     // [
-    //     //     {
-    //     //         "emailAddress": {
-    //     //             "address": data.UserEmail[0],
-    //     //             "name": data.UserEmail[0]
-    //     //         },
-    //     //         "type": "required"
-    //     //     }
-    //     // ]
-    //   })
-    //   .then(async (event) => {
-    //     // // alert('Event Created');
-    //     // await this.UpdateEventIDInList(data.AuditID, event.data.id);
-    //     // console.log(data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     // if (err.status == 429) {
-    //     //     this.reCreateEvents(data, ArrayOfAttendees, CurrentUser)
-    //     // }
-    //   });
-
-    // const newEvent = {
-    //   subject: "New event",
-    //   start: {
-    //     dateTime: startDate,
-    //     timeZone: "Pacific Standard Time",
-    //   },
-    //   end: {
-    //     dateTime: endDate,
-    //     timeZone: "Pacific Standard Time",
-    //   },
-    // };
-
-    // // const graphClient = await getClient();
-    // let currentUser = await getClient().api("/me").get(); // get the current user
-    // await getClient()
-    //   .api(`/users/${currentUser.id}/calendar/events`)
-    //   .post(newEvent); // add the new event to the user's calendar
-
-    // -------------
-  };
-
-  // :::: - - ::::
   /**
    *
    *
@@ -770,6 +610,118 @@ export class Event extends React.Component<IEventProps, IEventState> {
         displayDialog: false,
       });
     }
+  }
+
+  public async addOutlookEvent() {
+    let CurrentUserEmail;
+    sp.web.currentUser
+      .get()
+      .then((user) => {
+        CurrentUserEmail = user.Email;
+        console.log(CurrentUserEmail);
+      })
+      .catch((error) => {
+        console.log(`Error getting current user: ${error}`);
+      });
+    let StartDate =
+      moment(this.state.startDate).format("YYYY-MM-DD") + "T02:01:00";
+
+    let EndDate = moment(this.state.endDate).format("YYYY-MM-DD") + "T02:31:00";
+
+    let Subject = this.state.eventData.title;
+    let Location = this.state.eventData.location;
+    let Attendees = this.state.eventData.attendes;
+
+    // console.log("Start Date: " + startDate);
+    // console.log("End Date: " + EndDate);
+    // console.log("Subject: " + Subject);
+    // console.log("Location: " + Location);
+    // console.log("Attendees: " + Attendees);
+
+    // await graph.users
+    //   .getById(CurrentUserEmail)
+    //   .calendar.events.add({
+    //     subject: Subject,
+    //     body: {
+    //       contentType: "html",
+    //       content: "New Event is been Created :)",
+    //     },
+    //     start: {
+    //       dateTime: StartDate,
+    //       timeZone: "GMT Standard Time",
+    //     },
+    //     end: {
+    //       dateTime: EndDate,
+    //       timeZone: "GMT Standard Time",
+    //     },
+    //     location: {
+    //       displayName: Location,
+    //     },
+    //     attendees: Attendees,
+    //     // [
+    //     //     {
+    //     //         "emailAddress": {
+    //     //             "address": data.UserEmail[0],
+    //     //             "name": data.UserEmail[0]
+    //     //         },
+    //     //         "type": "required"
+    //     //     }
+    //     // ]
+    //   })
+    //   .then(async (event) => {
+    //     // alert('Event Created');
+    //     console.log(event);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     // if (err.status == 429) {
+    //     //     this.reCreateEvents(data, ArrayOfAttendees, CurrentUser)
+    //     // }
+    //   });
+
+    // ::::  Using /me/events  ::::
+    console.log(this.state.eventData);
+    let event = {
+      subject: this.state.eventData.title,
+      body: {
+        contentType: "HTML",
+        content: "Does late morning work for you?",
+      },
+      start: {
+        dateTime: "2023-03-28T12:00:00",
+        timeZone: "Pacific Standard Time",
+      },
+      end: {
+        dateTime: "2023-03-29T14:00:00",
+        timeZone: "Pacific Standard Time",
+      },
+      location: {
+        displayName: "Harry's Bar",
+      },
+      attendees: [
+        {
+          emailAddress: {
+            address: "DhyeySojitra@DesireInfoweb143.onmicrosoft.com",
+            name: "Dhyey Sojitra",
+          },
+          // type: "required",
+        },
+      ],
+    };
+    await this.props.context.msGraphClientFactory
+      .getClient()
+      .then((client: MSGraphClient) => {
+        client.api("me/calendars/events").post(event);
+      })
+      .then(() => {
+        console.log("Data Added");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // Client.api("/me/events").post(event, (err, res) => {
+    //   console.log(res);
+    // });
   }
 
   /**
@@ -1707,14 +1659,4 @@ export class Event extends React.Component<IEventProps, IEventState> {
       </div>
     );
   }
-}
-
-function getClient() {
-  const clientId = "YOUR_CLIENT_ID";
-  const clientSecret = "YOUR_CLIENT_SECRET";
-  const authProvider = new ClientCredentialAuthProvider(clientId, clientSecret);
-  const client = Client.init({
-    authProvider,
-  });
-  return client;
 }
