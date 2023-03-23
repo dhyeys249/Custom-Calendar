@@ -283,6 +283,8 @@ export class Event extends React.Component<IEventProps, IEventState> {
         );
         eventData.attendes.push(Number(userInfo.Id));
 
+        console.log(userInfo);
+        console.log("ID of Attendee " + userInfo.Id);
         // const userName = userInfo.title;
         // const userEmail = userInfo.Email;
       }
@@ -624,8 +626,6 @@ export class Event extends React.Component<IEventProps, IEventState> {
 
     // const client = Client.init(options);
 
-    console.log("Here");
-
     let CurrentUser;
     sp.web.currentUser
       .get()
@@ -649,6 +649,21 @@ export class Event extends React.Component<IEventProps, IEventState> {
     // let Location = this.state.eventData.location;
     let Attendees = this.state.eventData.attendes;
     console.log("Attendees After outlook Event: " + Attendees);
+
+    let identities = this.props.context.msGraphClientFactory
+      .getClient()
+      .then((client: MSGraphClient) => {
+        client.api("/users/" + Attendees + "/identities").get();
+      })
+      .then(() => {
+        console.log("Data Added");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    console.log(identities);
+
     // console.log(StartDate);
     // console.log(EndDate);
     // console.log(Attendees);
