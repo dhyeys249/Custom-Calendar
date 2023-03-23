@@ -46,10 +46,7 @@ import { toLocaleShortDateString } from "../../utils/dateUtils";
 import { graph } from "@pnp/pnpjs";
 import { Calendar } from "react-big-calendar";
 const format = require("string-format");
-const {
-  ClientCredentialAuthProvider,
-  Client,
-} = require("@microsoft/microsoft-graph-client");
+import { Client } from "@microsoft/microsoft-graph-client";
 import {
   SPHttpClient,
   SPHttpClientResponse,
@@ -285,6 +282,9 @@ export class Event extends React.Component<IEventProps, IEventState> {
           this.props.siteUrl
         );
         eventData.attendes.push(Number(userInfo.Id));
+
+        // const userName = userInfo.title;
+        // const userEmail = userInfo.Email;
       }
 
       this.setState({ isSaving: true });
@@ -611,32 +611,47 @@ export class Event extends React.Component<IEventProps, IEventState> {
       });
     }
   }
+  // ::::  ---- ---- ---- ---- ---- ---- ---- ----  ::::
+
+  // :::: Adding Event in Outlook by @Dhyey Sojitra ::::
 
   public async addOutlookEvent() {
-    let CurrentUserEmail;
+    // let index = 0;
+    // let aadTokenProvider =
+    //   await this.props.context.aadTokenProviderFactory.getTokenProvider();
+    // let token = await aadTokenProvider.getToken("https://graph.microsoft.com");
+    // console.log(token);
+
+    // const client = Client.init(options);
+
+    console.log("Here");
+
+    let CurrentUser;
     sp.web.currentUser
       .get()
       .then((user) => {
-        CurrentUserEmail = user.Email;
-        console.log(CurrentUserEmail);
+        CurrentUser = user.Id;
+        console.log("CurrentUser: " + CurrentUser);
       })
       .catch((error) => {
         console.log(`Error getting current user: ${error}`);
       });
-    let StartDate =
-      moment(this.state.startDate).format("YYYY-MM-DD") + "T02:01:00";
 
-    let EndDate = moment(this.state.endDate).format("YYYY-MM-DD") + "T02:31:00";
+    console.log(this.state.eventData);
+    let StartDate = moment(this.state.eventData.EventDate).format(
+      "YYYY-MM-DDTHH:mm:ss"
+    );
+    let EndDate = moment(this.state.eventData.EndDate).format(
+      "YYYY-MM-DDTHH:mm:ss"
+    );
 
     let Subject = this.state.eventData.title;
-    let Location = this.state.eventData.location;
+    // let Location = this.state.eventData.location;
     let Attendees = this.state.eventData.attendes;
-
-    // console.log("Start Date: " + startDate);
-    // console.log("End Date: " + EndDate);
-    // console.log("Subject: " + Subject);
-    // console.log("Location: " + Location);
-    // console.log("Attendees: " + Attendees);
+    console.log("Attendees After outlook Event: " + Attendees);
+    // console.log(StartDate);
+    // console.log(EndDate);
+    // console.log(Attendees);
 
     // await graph.users
     //   .getById(CurrentUserEmail)
@@ -681,49 +696,66 @@ export class Event extends React.Component<IEventProps, IEventState> {
 
     // ::::  Using /me/events  ::::
     console.log(this.state.eventData);
-    let event = {
-      subject: this.state.eventData.title,
-      body: {
-        contentType: "HTML",
-        content: "Does late morning work for you?",
-      },
+    const event = {
+      subject: Subject,
+      body: { contentType: "HTML", content: "Testing" },
       start: {
-        dateTime: "2023-03-28T12:00:00",
-        timeZone: "Pacific Standard Time",
+        dateTime: StartDate,
+        timeZone: "India Standard Time",
       },
       end: {
-        dateTime: "2023-03-29T14:00:00",
-        timeZone: "Pacific Standard Time",
+        dateTime: EndDate,
+        timeZone: "India Standard Time",
       },
-      location: {
-        displayName: "Harry's Bar",
-      },
+      // location: { displayName: "Office" },
       attendees: [
-        {
-          emailAddress: {
-            address: "DhyeySojitra@DesireInfoweb143.onmicrosoft.com",
-            name: "Dhyey Sojitra",
-          },
-          // type: "required",
-        },
+        // Attendees,
+        // {
+        //   emailAddress: {
+        //     address: "DhyeySojitra@DesireInfoweb143.onmicrosoft.com",
+        //     name: "Dhyey Sojitra",
+        //   },
+        //   type: "required",
+        // },
       ],
+      allowNewTimeProposals: true,
+      // transactionId: "7E163156-7762-4BEB-A1C6-729EA81755A7",
     };
-    await this.props.context.msGraphClientFactory
-      .getClient()
-      .then((client: MSGraphClient) => {
-        client.api("me/calendars/events").post(event);
-      })
-      .then(() => {
-        console.log("Data Added");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+    // :::: Tested Working ::::
+
+    // await this.props.context.msGraphClientFactory
+    //   .getClient()
+    //   .then((client: MSGraphClient) => {
+    //     client.api("me/events").post(event);
+    //   })
+    //   .then(() => {
+    //     console.log("Data Added");
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    // ::::::::::::::::::::
+
+    // client
+    //   .api("/me/events")
+    //   .post(event)
+    //   .then((result) => {
+    //     console.log("Event added:", result);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error adding event:", error);
+    //   });
+
     // Client.api("/me/events").post(event, (err, res) => {
     //   console.log(res);
     // });
   }
 
+  // :::: ---- ---- ---- ---- ---- ---- ::::
+
+  // :::: ---- ---- ---- ---- ---- ---- ::::
   /**
    * @private
    * @returns

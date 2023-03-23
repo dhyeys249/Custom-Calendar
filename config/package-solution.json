@@ -39,6 +39,18 @@
       {
         "resource": "Microsoft Graph",
         "scope": "Group.ReadWrite.All"
+      },
+      {
+        "resource": "Windows Azure Active Directory",
+        "scope": "User.Read"
+      },
+      {
+        "resource": "Azure DevOps",
+        "scope": "user_impersonation"
+      },
+      {
+        "resource": "SharePoint Online Client Extensibility Web Application Principal",
+        "scope": "user_impersonation"
       }
     ]
   },
