@@ -386,6 +386,8 @@ export class Event extends React.Component<IEventProps, IEventState> {
       }
 
       // testa  attendees
+      //
+      //
       const attendees = event.attendes;
       let selectedUsers: string[] = [];
       if (attendees && attendees.length > 0) {
@@ -399,6 +401,8 @@ export class Event extends React.Component<IEventProps, IEventState> {
           }
         }
       }
+      //
+      //
 
       const recurrenceInfo =
         event.EventType === "4" && event.MasterSeriesItemID !== ""
@@ -616,7 +620,11 @@ export class Event extends React.Component<IEventProps, IEventState> {
   // ::::  ---- ---- ---- ---- ---- ---- ---- ----  ::::
 
   // :::: Adding Event in Outlook by @Dhyey Sojitra ::::
-
+  //
+  //
+  //
+  //
+  //
   public async addOutlookEvent() {
     // let index = 0;
     // let aadTokenProvider =
@@ -650,19 +658,26 @@ export class Event extends React.Component<IEventProps, IEventState> {
     let Attendees = this.state.eventData.attendes;
     console.log("Attendees After outlook Event: " + Attendees);
 
-    let identities = this.props.context.msGraphClientFactory
-      .getClient()
-      .then((client: MSGraphClient) => {
-        client.api("/users/" + Attendees + "/identities").get();
-      })
-      .then(() => {
-        console.log("Data Added");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // const identities = await Promise.all(
+    //   Attendees.map((attendee) => {
+    //     return console.log("Attendee: " + sp.web.getUserById(attendee).get());
+    //   })
+    // )
 
-    console.log(identities);
+    //   // this.props.context.msGraphClientFactory
+    //   //   .getClient()
+    //   //   .then((client: MSGraphClient) => {
+    //   //     sp.web.getUserById(Attendees)();
+    //   //     // client.api("/users/" + Attendees + "/identities").get();
+    //   //   })
+    //   .then(() => {
+    //     console.log("Data Fetched");
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    // console.log("Identities: " + identities);
 
     // console.log(StartDate);
     // console.log(EndDate);
@@ -710,7 +725,7 @@ export class Event extends React.Component<IEventProps, IEventState> {
     //   });
 
     // ::::  Using /me/events  ::::
-    console.log(this.state.eventData);
+    console.log("Event Data: " + this.state.eventData);
     const event = {
       subject: Subject,
       body: { contentType: "HTML", content: "Testing" },
@@ -739,17 +754,17 @@ export class Event extends React.Component<IEventProps, IEventState> {
 
     // :::: Tested Working ::::
 
-    // await this.props.context.msGraphClientFactory
-    //   .getClient()
-    //   .then((client: MSGraphClient) => {
-    //     client.api("me/events").post(event);
-    //   })
-    //   .then(() => {
-    //     console.log("Data Added");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    await this.props.context.msGraphClientFactory
+      .getClient()
+      .then((client: MSGraphClient) => {
+        client.api("me/events").post(event);
+      })
+      .then(() => {
+        console.log("Data Added");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     // ::::::::::::::::::::
 
@@ -768,6 +783,11 @@ export class Event extends React.Component<IEventProps, IEventState> {
     // });
   }
 
+  //
+  //
+  //
+  //
+  //
   // :::: ---- ---- ---- ---- ---- ---- ::::
 
   // :::: ---- ---- ---- ---- ---- ---- ::::
